@@ -4,38 +4,34 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
-
+using TMPro;
 public class EquationGenerator : MonoBehaviour
 {
-    public int equationLength = 3;
-    private int numberRange = 10;
-    private List<int> numbersList = new List<int>();
-    private List<string> operatorsList = new List<string>();
-    private string[] operators;
+    public int equationLength = 5;
+    public int numberRange = 20;
+    public GameObject equationText;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        operators = new string[] { "+", "=", "-" };
-        GenerateEquation();
+        int eq1Len = Random.Range(1, equationLength);
+        string eq1String = GenerateEquation(eq1Len).eqToString();
+        string eq2String = GenerateEquation(equationLength - eq1Len).eqToString();
+        equationText.GetComponent<TextMeshProUGUI>().text = eq1String + "=" + eq2String;
     }
-
-    private void Awake()
-    {
-        
-    }
-
+   
     // Update is called once per frame
     void Update()
     {
 
     }
 
-    void GenerateEquation()
+    EquationNode GenerateEquation(int eqLen)
     {
         EquationNode TestEq = new EquationNode();
-        TestEq.GenerateEq(5,10);
-        TestEq.printResults();
+        TestEq.operators = new string[] { "+", "-", "*" };
+        TestEq.GenerateEq(eqLen, numberRange);
+        return TestEq;
     }
 }
 
@@ -45,108 +41,54 @@ public class EquationNode
     private EquationNode rightEq;
     private string eqOperator;
     private int value;
-
-    private const int NoValue = int.MinValue;
-
+    public string[] operators;
+    private string[] nextOperators;
     public void GenerateEq(int eqLength, int targetNum)
     {
-        value = NoValue;
-        leftEq = null;
-        rightEq = null;
-        eqOperator = null;
-
-        // Base case: leaf node
-        if (eqLength <= 1)
+        eqOperator = operators[Random.Range(0, operators.Length)];
+        value = int.MinValue;
+        switch (eqLength)
         {
-            value = targetNum;
-            return;
+            case 1:
+                leftEq = null;
+                rightEq = null;
+                value = targetNum;
+                eqOperator = null;
+                break;
+            case > 1:
+                int randVar = Random.Range(0, 1);
+                int[] nums = IntFromOp(eqOperator, targetNum);
+                leftEq = new EquationNode();
+                leftEq.operators = nextOperators;
+                leftEq.GenerateEq(1, nums[0]);
+
+                rightEq = new EquationNode();
+                rightEq.operators = nextOperators;
+                rightEq.GenerateEq(eqLength - 1, nums[1]);
+                break;
         }
-
-        // Build list of operators that are safe for this target
-        List<string> validOperators = GetValidOperators(targetNum);
-
-        // If nothing is valid, stop early as a leaf
-        if (validOperators.Count == 0)
-        {
-            value = targetNum;
-            return;
-        }
-
-        eqOperator = validOperators[Random.Range(0, validOperators.Count)];
-
-        int[] nums = IntFromOp(eqOperator, targetNum);
-
-        leftEq = new EquationNode();
-        leftEq.GenerateEq(1, nums[0]);
-
-        rightEq = new EquationNode();
-        rightEq.GenerateEq(eqLength - 1, nums[1]);
-    }
-
-    private List<string> GetValidOperators(int targetNum)
-    {
-        List<string> valid = new List<string>();
-
-        // + needs room to split target into two positive ints
-        if (targetNum >= 2)
-        {
-            valid.Add("+");
-        }
-
-        // - is always possible if you allow positive integers
-        valid.Add("-");
-
-        // * only makes sense when target has a non-trivial factorization
-        if (HasNonTrivialFactor(targetNum))
-        {
-            valid.Add("*");
-        }
-
-        return valid;
-    }
-
-    private bool HasNonTrivialFactor(int targetNum)
-    {
-        if (targetNum < 2)
-        {
-            return false;
-        }
-
-        for (int i = 2; i < targetNum; i++)
-        {
-            if (targetNum % i == 0)
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private int[] IntFromOp(string inputOperator, int targetNum)
     {
         int result1 = 0;
         int result2 = 0;
-
         switch (inputOperator)
         {
             case "+":
-                // targetNum >= 2 guaranteed by GetValidOperators
-                result1 = Random.Range(1, targetNum);
+                result1 = Random.Range(1, targetNum - 1);
                 result2 = targetNum - result1;
+                nextOperators = new string[] { "+", "-", "*" };
                 break;
-
             case "-":
-                // left - right = targetNum
-                // choose a left value larger than targetNum
-                result1 = Random.Range(targetNum + 1, targetNum + 11);
+                result1 = Random.Range(targetNum + 1, targetNum * 2 - 1);
                 result2 = result1 - targetNum;
+                nextOperators = new string[] { "*" };
                 break;
-
             case "*":
                 List<int> possibilities = new List<int>();
-
-                for (int i = 2; i < targetNum; i++)
+                nextOperators = new string[] { "*" };
+                for (int i = 1; i <= targetNum; i++)
                 {
                     if (targetNum % i == 0)
                     {
@@ -154,52 +96,34 @@ public class EquationNode
                     }
                 }
 
-                // Safe because GetValidOperators only allows * if non-trivial factors exist
                 result1 = possibilities[Random.Range(0, possibilities.Count)];
                 result2 = targetNum / result1;
                 break;
         }
 
-        return new int[] { result1, result2 };
+        int[] results = { result1, result2 };
+        return results;
     }
 
-    public int Evaluate()
+    public string eqToString()
     {
-        if (value != NoValue)
+        string returnString = "";
+        if (value != int.MinValue)
         {
-            return value;
+            returnString += value;
         }
-
-        int leftValue = leftEq.Evaluate();
-        int rightValue = rightEq.Evaluate();
-
-        switch (eqOperator)
+        if (leftEq != null)
         {
-            case "+":
-                return leftValue + rightValue;
-            case "-":
-                return leftValue - rightValue;
-            case "*":
-                return leftValue * rightValue;
-            default:
-                Debug.LogError("Unknown operator: " + eqOperator);
-                return 0;
+            returnString += leftEq.eqToString();
         }
-    }
-
-    public string ToExpressionString()
-    {
-        if (value != NoValue)
+        if (eqOperator != null)
         {
-            return value.ToString();
+            returnString += eqOperator;
         }
-
-        return "(" + leftEq.ToExpressionString() + " " + eqOperator + " " + rightEq.ToExpressionString() + ")";
-    }
-
-    public void printResults()
-    {
-        Debug.Log(ToExpressionString());
-        Debug.Log("= " + Evaluate());
+        if (rightEq != null)
+        {
+            returnString += rightEq.eqToString();
+        }
+        return returnString;
     }
 }
