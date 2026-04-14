@@ -37,6 +37,8 @@ public class EquationGenerator : MonoBehaviour
 
     void BuildNewEquation()
     {
+        numberRange = Random.Range(7, 20);
+        equationLength = Random.Range(3, 6);
         int eq1Len = Random.Range(1, equationLength);
         string eq1String = GenerateEquation(eq1Len).eqToString();
         string eq2String = GenerateEquation(equationLength - eq1Len).eqToString();
