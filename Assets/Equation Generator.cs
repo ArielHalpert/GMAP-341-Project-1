@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using NUnit.Framework.Constraints;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
@@ -25,10 +26,10 @@ public class EquationGenerator : MonoBehaviour
 
     private int Score;
 
+    public bool equationSolved;
+
     void Start()
     {
-        BuildNewEquation();
-
         addButton.onClick.AddListener(() => AddInput("+"));
         subButton.onClick.AddListener(() => AddInput("-"));
         multButton.onClick.AddListener(() => AddInput("*"));
@@ -80,7 +81,7 @@ public class EquationGenerator : MonoBehaviour
         inputList = new List<string>(new string[operatorList.Count]);
     }
 
-    void AddInput(string symbol)
+    void AddInput(string symbol) //chat
     {
         for (int i = 0; i < inputList.Count; i++)
         {
@@ -92,7 +93,7 @@ public class EquationGenerator : MonoBehaviour
         }
     }
 
-    bool EvaluateExpression(string expression)
+    bool EvaluateExpression(string expression) //chat
     {
         string[] sides = expression.Split('=');
 
@@ -104,14 +105,13 @@ public class EquationGenerator : MonoBehaviour
         return left == right;
     }
 
-    int EvaluateSide(string expr)
+    int EvaluateSide(string expr) //chat
     {
         List<int> numbers = new List<int>();
         List<char> ops = new List<char>();
 
         string currentNumber = "";
 
-        // Parse numbers and operators
         for (int i = 0; i < expr.Length; i++)
         {
             char c = expr[i];
@@ -128,13 +128,11 @@ public class EquationGenerator : MonoBehaviour
             }
         }
 
-        // Add last number
         if (currentNumber != "")
         {
             numbers.Add(int.Parse(currentNumber));
         }
 
-        // Handle multiplication first
         for (int i = 0; i < ops.Count; i++)
         {
             if (ops[i] == '*')
@@ -147,7 +145,6 @@ public class EquationGenerator : MonoBehaviour
             }
         }
 
-        // Then handle + and -
         int total = numbers[0];
 
         for (int i = 0; i < ops.Count; i++)
@@ -165,58 +162,94 @@ public class EquationGenerator : MonoBehaviour
         return total;
     }
 
-    void Update()
+    bool IsInputFull() //chat
     {
-        string displayString = "";
-        bool isFull = true;
-        scoreText.GetComponent<TextMeshProUGUI>().text = "Score: " + Score.ToString();
-
-        for (int i = 0; i < numberList.Count; i++)
+        for (int i = 0; i < inputList.Count; i++)
         {
-            displayString += numberList[i];
-
-            if (i < inputList.Count)
+            if (inputList[i] == null)
             {
-                if (inputList[i] == null)
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public IEnumerator RunEquation() //chat
+    {
+        equationSolved = false;
+        BuildNewEquation();
+
+        while (!equationSolved)
+        {
+            if (IsInputFull())
+            {
+                string displayString = "";
+
+                for (int i = 0; i < numberList.Count; i++)
                 {
-                    displayString += "_";
-                    isFull = false;
+                    displayString += numberList[i];
+
+                    if (i < inputList.Count)
+                    {
+                        if (inputList[i] != null)
+                        {
+                            displayString += inputList[i];
+                        }
+                    }
+                }
+
+                int equalsCount = 0;
+
+                for (int i = 0; i < displayString.Length; i++)
+                {
+                    if (displayString[i] == '=')
+                    {
+                        equalsCount++;
+                    }
+                }
+
+                if (equalsCount == 1 && EvaluateExpression(displayString))
+                {
+                    Score += 1;
+                    equationSolved = true;
                 }
                 else
                 {
-                    displayString += inputList[i];
+                    inputList = new List<string>(new string[operatorList.Count]);
+                }
+            }
+
+            yield return null;
+        }
+    }
+
+    void Update()
+    {
+        string displayString = "";
+        scoreText.GetComponent<TextMeshProUGUI>().text = "Score: " + Score.ToString();
+
+        if (numberList != null && inputList != null)
+        {
+            for (int i = 0; i < numberList.Count; i++)
+            {
+                displayString += numberList[i];
+
+                if (i < inputList.Count)
+                {
+                    if (inputList[i] == null)
+                    {
+                        displayString += "_";
+                    }
+                    else
+                    {
+                        displayString += inputList[i];
+                    }
                 }
             }
         }
 
         equationText.GetComponent<TextMeshProUGUI>().text = displayString;
-
-        if (isFull)
-        {
-            int equalsCount = 0;
-
-            for (int i = 0; i < displayString.Length; i++)
-            {
-                if (displayString[i] == '=')
-                {
-                    equalsCount++;
-                }
-            }
-
-            if (equalsCount != 1)
-            {
-                inputList = new List<string>(new string[operatorList.Count]);
-            }
-            else if (EvaluateExpression(displayString))
-            {
-                Score += 1;
-                BuildNewEquation();
-            }
-            else
-            {
-                inputList = new List<string>(new string[operatorList.Count]);
-            }
-        }
     }
 
     EquationNode GenerateEquation(int eqLen)
