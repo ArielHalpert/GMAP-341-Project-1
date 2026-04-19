@@ -27,6 +27,8 @@ public class EquationGenerator : MonoBehaviour
 
     public bool equationSolved;
 
+    public int health = 3;
+
     void Start()
     {
         addButton.onClick.AddListener(() => AddInput("+"));
@@ -217,6 +219,7 @@ public class EquationGenerator : MonoBehaviour
                 else
                 {
                     inputList = new List<string>(new string[operatorList.Count]);
+                    health -= 1;
                 }
             }
             yield return null;

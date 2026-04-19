@@ -3,6 +3,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,8 +11,10 @@ public class GameManager : MonoBehaviour
     public Material wall;
     public GameObject scoreText;
     public GameObject floorText;
+    public GameObject healthText;
 
     private int score;
+    
 
     private Vector2 wallOffset = new Vector2(0, 0);
 
@@ -19,6 +22,15 @@ public class GameManager : MonoBehaviour
     {
         equationGenerator = FindAnyObjectByType<EquationGenerator>();
         StartCoroutine(GameLoop());
+    }
+
+    private void Update()
+    {
+        healthText.GetComponent<TextMeshProUGUI>().text = "Health: " + equationGenerator.health.ToString();
+        if (equationGenerator.health < 1)
+        {
+            SceneManager.LoadScene("Lose");
+        }
     }
 
     IEnumerator GameLoop()
