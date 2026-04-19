@@ -5,8 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
+    public AudioSource musicSource;
+    public AudioClip gameMusic;
+    public AudioClip pauseMusic;
     public GameObject pauseMenu;
     public GameObject confirmMenu;
+    public GameObject gameUI;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -24,15 +28,19 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void Pause(){
+        gameUI.SetActive(false);
         pauseMenu.SetActive(true);
         Time.timeScale = 0;
-        AudioListener.pause = true;
+        musicSource.clip = pauseMusic;
+        musicSource.Play();
     }
 
     public void Resume(){
+        gameUI.SetActive(true);
         pauseMenu.SetActive(false);
         Time.timeScale = 1;
-        AudioListener.pause = false;
+        musicSource.clip = gameMusic;
+        musicSource.Play();
     }
 
     public void ClickAndLoadMainMenu(){
@@ -40,7 +48,7 @@ public class PauseMenu : MonoBehaviour
         Invoke("LoadMainMenu", 0.3f);
     }
     public void LoadMainMenu(){
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("Main Menu");
     }
 
     public void BackToPauseMenu(){
