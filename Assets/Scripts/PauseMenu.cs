@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,6 +12,7 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenu;
     public GameObject confirmMenu;
     public GameObject gameUI;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -43,16 +45,11 @@ public class PauseMenu : MonoBehaviour
         musicSource.Play();
     }
 
-    public void ClickAndLoadMainMenu(){
-        Time.timeScale = 1;
-        Invoke("LoadMainMenu", 0.3f);
-    }
     public void LoadMainMenu(){
         SceneManager.LoadScene("Main Menu");
     }
 
     public void BackToPauseMenu(){
-
         confirmMenu.SetActive(false);
         pauseMenu.SetActive(true);
     }
