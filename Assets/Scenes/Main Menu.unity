@@ -374,8 +374,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -11.353, y: 77}
-  m_SizeDelta: {x: 265.2936, y: 50}
+  m_AnchoredPosition: {x: -19, y: 77}
+  m_SizeDelta: {x: 335.8924, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &368753592
 MonoBehaviour:
@@ -419,7 +419,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 97690656
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -695,7 +695,7 @@ GameObject:
   - component: {fileID: 981216075}
   - component: {fileID: 981216074}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Credits
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
