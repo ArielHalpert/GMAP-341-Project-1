@@ -1,10 +1,15 @@
-using UnityEngine;
 using System.Collections;
+using TMPro;
+using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class GameManager : MonoBehaviour
 {
     private EquationGenerator equationGenerator;
     public Material wall;
+    public GameObject scoreText;
+
+    private int score;
 
     private Vector2 wallOffset = new Vector2(0, 0);
 
@@ -19,6 +24,8 @@ public class GameManager : MonoBehaviour
         while (true)
         {
             yield return StartCoroutine(WalkForward());
+            score += 1;
+            scoreText.GetComponent<TextMeshProUGUI>().text = "Score: " + score.ToString();
             yield return StartCoroutine(equationGenerator.RunEquation());
         }
     }

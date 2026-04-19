@@ -14,7 +14,6 @@ public class EquationGenerator : MonoBehaviour
     public int equationLength = 5;
     public int numberRange = 20;
     public GameObject equationText;
-    public GameObject scoreText;
     private List<string> numberList;
     private List<string> operatorList;
     private List<string> inputList;
@@ -24,7 +23,7 @@ public class EquationGenerator : MonoBehaviour
     public Button multButton;
     public Button eqButton;
 
-    private int Score;
+    public GameObject eqPanel;
 
     public bool equationSolved;
 
@@ -177,6 +176,7 @@ public class EquationGenerator : MonoBehaviour
 
     public IEnumerator RunEquation() //chat
     {
+        eqPanel.SetActive(true);
         equationSolved = false;
         BuildNewEquation();
 
@@ -211,15 +211,14 @@ public class EquationGenerator : MonoBehaviour
 
                 if (equalsCount == 1 && EvaluateExpression(displayString))
                 {
-                    Score += 1;
                     equationSolved = true;
+                    eqPanel.SetActive(false);
                 }
                 else
                 {
                     inputList = new List<string>(new string[operatorList.Count]);
                 }
             }
-
             yield return null;
         }
     }
@@ -227,7 +226,6 @@ public class EquationGenerator : MonoBehaviour
     void Update()
     {
         string displayString = "";
-        scoreText.GetComponent<TextMeshProUGUI>().text = "Score: " + Score.ToString();
 
         if (numberList != null && inputList != null)
         {
