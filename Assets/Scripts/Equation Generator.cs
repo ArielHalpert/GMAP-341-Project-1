@@ -35,13 +35,13 @@ public class EquationGenerator : MonoBehaviour
         eqButton.onClick.AddListener(() => AddInput("="));
     }
 
-    void BuildNewEquation()
+    void BuildNewEquation(int eqLen, int operators)
     {
         numberRange = Random.Range(7, 20);
-        equationLength = Random.Range(3, 6);
+        equationLength = eqLen;
         int eq1Len = Random.Range(1, equationLength);
-        string eq1String = GenerateEquation(eq1Len).eqToString();
-        string eq2String = GenerateEquation(equationLength - eq1Len).eqToString();
+        string eq1String = GenerateEquation(eq1Len, operators).eqToString();
+        string eq2String = GenerateEquation(equationLength - eq1Len, operators).eqToString();
         string equation = eq1String + "=" + eq2String;
 
         numberList = new List<string>();
@@ -174,11 +174,11 @@ public class EquationGenerator : MonoBehaviour
         return true;
     }
 
-    public IEnumerator RunEquation() //chat
+    public IEnumerator RunEquation(int eqLen, int operators) //chat
     {
         eqPanel.SetActive(true);
         equationSolved = false;
-        BuildNewEquation();
+        BuildNewEquation(eqLen, operators);
 
         while (!equationSolved)
         {
@@ -250,10 +250,23 @@ public class EquationGenerator : MonoBehaviour
         equationText.GetComponent<TextMeshProUGUI>().text = displayString;
     }
 
-    EquationNode GenerateEquation(int eqLen)
+    EquationNode GenerateEquation(int eqLen, int operators)
     {
         EquationNode TestEq = new EquationNode();
-        TestEq.operators = new List<string> { "+", "-", "*" };
+
+        if (operators <= 1)
+        {
+            TestEq.operators = new List<string> { "+" };
+        }
+        else if (operators == 2)
+        {
+            TestEq.operators = new List<string> { "+", "-" };
+        }
+        else
+        {
+            TestEq.operators = new List<string> { "+", "-", "*" };
+        }
+
         TestEq.GenerateEq(eqLen, numberRange);
         return TestEq;
     }
