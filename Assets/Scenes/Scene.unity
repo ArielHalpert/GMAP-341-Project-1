@@ -2394,6 +2394,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1125146879}
   - component: {fileID: 1125146878}
+  - component: {fileID: 1125146880}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2421,6 +2422,7 @@ MonoBehaviour:
   subButton: {fileID: 886359457}
   multButton: {fileID: 403963850}
   eqButton: {fileID: 483308822}
+  equationSolved: 0
 --- !u!4 &1125146879
 Transform:
   m_ObjectHideFlags: 0
@@ -2436,6 +2438,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1125146880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1125146877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa1016fee6b47cb47836cce07086f2b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  wall: {fileID: 2100000, guid: 82652ddbe1818024ba721fd59d15f6b5, type: 2}
 --- !u!1 &1146864530
 GameObject:
   m_ObjectHideFlags: 0
