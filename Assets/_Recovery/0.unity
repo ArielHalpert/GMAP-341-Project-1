@@ -1882,6 +1882,7 @@ GameObject:
   - component: {fileID: 859126969}
   - component: {fileID: 859126972}
   - component: {fileID: 859126973}
+  - component: {fileID: 859126974}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2019,6 +2020,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d2be301fe4478746b82d7023ac082d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pause
+--- !u!95 &859126974
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859126968}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c90c01a78cf2fea4184bcfd4fdcf370a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &862488976
 GameObject:
   m_ObjectHideFlags: 0

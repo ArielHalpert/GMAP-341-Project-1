@@ -38,7 +38,13 @@ public class GameManager : MonoBehaviour
     {
         while (true)
         {
-            int floor = score / 3;
+            int floor = score / 5;
+
+            Random.InitState(floor);
+            float hue = Random.value;
+
+            Color color = Color.HSVToRGB(hue, 1f, 1f);
+            wall.color = color;
 
             Vector3 pos = enemy.transform.position;
             pos.z = Random.Range(140f, 300f);
@@ -50,13 +56,13 @@ public class GameManager : MonoBehaviour
             yield return StartCoroutine(skeleton.Walk());
 
             yield return StartCoroutine(
-                equationGenerator.RunEquation(Random.Range(3, floor + 4), floor + 1)
+                equationGenerator.RunEquation(Random.Range(3, floor + 4), floor)
             );
 
             score += 1;
             scoreText.GetComponent<TextMeshProUGUI>().text = "Score: " + score;
 
-            floor = score / 3;
+            floor = score / 5;
             floorText.GetComponent<TextMeshProUGUI>().text = "Floor: " + floor;
         }
     }
