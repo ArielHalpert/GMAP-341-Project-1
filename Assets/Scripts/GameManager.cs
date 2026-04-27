@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public GameObject scoreText;
     public GameObject floorText;
     public GameObject healthText;
+    public GameObject enemy;
 
     private int score;
     
@@ -37,30 +38,41 @@ public class GameManager : MonoBehaviour
     {
         while (true)
         {
-            int floor = (score / 3);
-            yield return StartCoroutine(WalkForward());
-            yield return StartCoroutine(equationGenerator.RunEquation(Random.Range(3, floor + 4), floor + 1));
+            int floor = score / 3;
+
+            Vector3 pos = enemy.transform.position;
+            pos.z = Random.Range(140f, 300f);
+            enemy.transform.position = pos;
+
+            Skeleton skeleton = enemy.GetComponent<Skeleton>();
+
+            StartCoroutine(WalkForward(enemy.transform));
+            yield return StartCoroutine(skeleton.Walk());
+
+            yield return StartCoroutine(
+                equationGenerator.RunEquation(Random.Range(3, floor + 4), floor + 1)
+            );
+
             score += 1;
-            scoreText.GetComponent<TextMeshProUGUI>().text = "Score: " + score.ToString();
-            floor = (score / 3);
-            string floorWhateverText = floor.ToString();
-            floorText.GetComponent<TextMeshProUGUI>().text = "Floor: " + floorWhateverText;
+            scoreText.GetComponent<TextMeshProUGUI>().text = "Score: " + score;
+
+            floor = score / 3;
+            floorText.GetComponent<TextMeshProUGUI>().text = "Floor: " + floor;
         }
     }
 
-    IEnumerator WalkForward()
+    IEnumerator WalkForward(Transform enemy)
     {
-        float duration = Random.Range(5f, 10f);
-        float elapsed = 0f;
-
-        while (elapsed < duration)
+        while (enemy.position.z > 20)
         {
-            yield return null;
+            Vector3 pos = enemy.position;
+            pos.z -= 20f * Time.deltaTime;
+            enemy.position = pos;
 
-            wallOffset.y += -1f * Time.deltaTime;
+            wallOffset.y -= 1f * Time.deltaTime;
             wall.mainTextureOffset = wallOffset;
 
-            elapsed += Time.deltaTime;
+            yield return null;
         }
     }
 }
