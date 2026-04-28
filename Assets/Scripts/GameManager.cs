@@ -14,13 +14,14 @@ public class GameManager : MonoBehaviour
     public GameObject healthText;
     public GameObject enemy;
 
-    private int score;
+    public static int score;
     
 
     private Vector2 wallOffset = new Vector2(0, 0);
 
     void Start()
     {
+        score = 0;
         equationGenerator = FindAnyObjectByType<EquationGenerator>();
         StartCoroutine(GameLoop());
     }
