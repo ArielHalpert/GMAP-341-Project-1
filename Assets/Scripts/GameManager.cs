@@ -42,8 +42,7 @@ public class GameManager : MonoBehaviour
         {
             floor = score / 5;
 
-            Random.InitState(floor);
-            float hue = Random.value;
+            float hue = Mathf.Repeat(floor * 0.17f, 1f);
 
             Color color = Color.HSVToRGB(hue, 1f, 1f);
             wall.color = color;
