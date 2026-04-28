@@ -188,7 +188,7 @@ public class EquationGenerator : MonoBehaviour
         {
 
             timer += Time.deltaTime;
-            if (timer > 10)
+            if (timer > 20)
             {
                 health -= 1;
                 eqPanel.SetActive(false);

@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public GameObject enemy;
 
     public static int score;
+    public static int floor;
     
 
     private Vector2 wallOffset = new Vector2(0, 0);
@@ -39,7 +40,7 @@ public class GameManager : MonoBehaviour
     {
         while (true)
         {
-            int floor = score / 5;
+            floor = score / 5;
 
             Random.InitState(floor);
             float hue = Random.value;
