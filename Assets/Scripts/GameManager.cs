@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
             wall.color = color;
 
             Vector3 pos = enemy.transform.position;
-            pos.z = Random.Range(140f, 300f);
+            pos.z = Random.Range(140f, 160f);
             enemy.transform.position = pos;
 
             Skeleton skeleton = enemy.GetComponent<Skeleton>();
@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
             yield return StartCoroutine(skeleton.Walk());
 
             yield return StartCoroutine(
-                equationGenerator.RunEquation(Random.Range(3, floor + 4), floor)
+                equationGenerator.RunEquation(Random.Range(3, floor + 4), floor, 20 + floor*5)
             );
             if (equationGenerator.equationSolved)
             {

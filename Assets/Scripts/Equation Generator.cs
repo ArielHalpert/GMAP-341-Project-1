@@ -29,17 +29,20 @@ public class EquationGenerator : MonoBehaviour
 
     public int health = 3;
 
+    private TMP_Text eqText;
+
     void Start()
     {
         addButton.onClick.AddListener(() => AddInput("+"));
         subButton.onClick.AddListener(() => AddInput("-"));
         multButton.onClick.AddListener(() => AddInput("*"));
         eqButton.onClick.AddListener(() => AddInput("="));
+
+        eqText = equationText.GetComponent<TMP_Text>();
     }
 
     void BuildNewEquation(int eqLen, int operators)
     {
-        numberRange = Random.Range(7, 20);
         equationLength = eqLen;
         int eq1Len = Random.Range(1, equationLength);
         string eq1String = GenerateEquation(eq1Len, operators).eqToString();
@@ -82,7 +85,7 @@ public class EquationGenerator : MonoBehaviour
         inputList = new List<string>(new string[operatorList.Count]);
     }
 
-    void AddInput(string symbol) //chat
+    void AddInput(string symbol)
     {
         for (int i = 0; i < inputList.Count; i++)
         {
@@ -94,7 +97,7 @@ public class EquationGenerator : MonoBehaviour
         }
     }
 
-    bool EvaluateExpression(string expression) //chat
+    bool EvaluateExpression(string expression)
     {
         string[] sides = expression.Split('=');
 
@@ -106,7 +109,7 @@ public class EquationGenerator : MonoBehaviour
         return left == right;
     }
 
-    int EvaluateSide(string expr) //chat
+    int EvaluateSide(string expr)
     {
         List<int> numbers = new List<int>();
         List<char> ops = new List<char>();
@@ -163,7 +166,7 @@ public class EquationGenerator : MonoBehaviour
         return total;
     }
 
-    bool IsInputFull() //chat
+    bool IsInputFull()
     {
         for (int i = 0; i < inputList.Count; i++)
         {
@@ -176,8 +179,9 @@ public class EquationGenerator : MonoBehaviour
         return true;
     }
 
-    public IEnumerator RunEquation(int eqLen, int operators) //chat
+    public IEnumerator RunEquation(int eqLen, int operators, int maxNum)
     {
+        numberRange = Random.Range(7, maxNum);
         eqPanel.SetActive(true);
         equationSolved = false;
         BuildNewEquation(eqLen, operators);
@@ -191,8 +195,18 @@ public class EquationGenerator : MonoBehaviour
             if (timer > 20)
             {
                 health -= 1;
+                equationSolved = false;
                 eqPanel.SetActive(false);
                 break;
+            }
+
+            if (timer > 17f)
+            {
+                float alpha = Mathf.PingPong(Time.time * 4f, 1f);
+
+                Color c = eqText.color;
+                c.a = alpha;
+                eqText.color = c;
             }
             if (IsInputFull())
             {
@@ -267,17 +281,20 @@ public class EquationGenerator : MonoBehaviour
     {
         EquationNode TestEq = new EquationNode();
 
-        if (operators <= 1)
+        if (operators <= 0)
         {
             TestEq.operators = new List<string> { "+" };
+            Debug.Log("ADDITION");
         }
-        else if (operators == 2)
+        else if (operators == 1)
         {
             TestEq.operators = new List<string> { "+", "-" };
+            Debug.Log("SUBTRACTION");
         }
         else
         {
             TestEq.operators = new List<string> { "+", "-", "*" };
+            Debug.Log("MULTIPLICATION");
         }
 
         TestEq.GenerateEq(eqLen, numberRange);
@@ -313,11 +330,11 @@ public class EquationNode
                 List<int> nums = IntFromOp(eqOperator, targetNum);
 
                 leftEq = new EquationNode();
-                leftEq.operators = nextOperators;
+                leftEq.operators = operators;
                 leftEq.GenerateEq(1, nums[0]);
 
                 rightEq = new EquationNode();
-                rightEq.operators = nextOperators;
+                rightEq.operators = operators;
                 rightEq.GenerateEq(eqLength - 1, nums[1]);
                 break;
         }
@@ -333,18 +350,15 @@ public class EquationNode
             case "+":
                 result1 = Random.Range(1, targetNum - 1);
                 result2 = targetNum - result1;
-                nextOperators = new List<string> { "+", "-", "*" };
                 break;
 
             case "-":
                 result1 = Random.Range(targetNum + 1, targetNum * 2 - 1);
                 result2 = result1 - targetNum;
-                nextOperators = new List<string> { "*" };
                 break;
 
             case "*":
                 List<int> possibilities = new List<int>();
-                nextOperators = new List<string> { "*" };
 
                 for (int i = 1; i <= targetNum; i++)
                 {
