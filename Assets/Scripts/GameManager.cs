@@ -74,10 +74,6 @@ public class GameManager : MonoBehaviour
     {
         while (enemy.position.z > 20)
         {
-            Vector3 pos = enemy.position;
-            pos.z -= 20f * Time.deltaTime;
-            enemy.position = pos;
-
             wallOffset.y -= 1f * Time.deltaTime;
             wall.mainTextureOffset = wallOffset;
 

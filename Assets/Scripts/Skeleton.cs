@@ -15,7 +15,7 @@ public class Skeleton : MonoBehaviour
         while (true)
         {
             Vector3 pos = transform.position;
-            pos.z += -10f * Time.deltaTime;
+            pos.z += -20f * Time.deltaTime;
             transform.position = pos;
             yield return null;
             if (transform.position.z < 20)
