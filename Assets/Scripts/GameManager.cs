@@ -59,8 +59,10 @@ public class GameManager : MonoBehaviour
             yield return StartCoroutine(
                 equationGenerator.RunEquation(Random.Range(3, floor + 4), floor)
             );
-
-            score += 1;
+            if (equationGenerator.equationSolved)
+            {
+                score += 1;
+            }
             scoreText.GetComponent<TextMeshProUGUI>().text = "Score: " + score;
 
             floor = score / 5;

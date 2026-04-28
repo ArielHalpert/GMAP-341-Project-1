@@ -182,8 +182,18 @@ public class EquationGenerator : MonoBehaviour
         equationSolved = false;
         BuildNewEquation(eqLen, operators);
 
+        float timer = 0f;
+
         while (!equationSolved)
         {
+
+            timer += Time.deltaTime;
+            if (timer > 10)
+            {
+                health -= 1;
+                eqPanel.SetActive(false);
+                break;
+            }
             if (IsInputFull())
             {
                 string displayString = "";
