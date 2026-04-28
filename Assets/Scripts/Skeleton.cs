@@ -18,7 +18,7 @@ public class Skeleton : MonoBehaviour
             pos.z += -20f * Time.deltaTime;
             transform.position = pos;
             yield return null;
-            if (transform.position.z < 20)
+            if (transform.position.z < 30)
             {
                 yield break;
             }

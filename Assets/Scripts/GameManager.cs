@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator WalkForward(Transform enemy)
     {
-        while (enemy.position.z > 20)
+        while (enemy.position.z > 30)
         {
             wallOffset.y -= 1f * Time.deltaTime;
             wall.mainTextureOffset = wallOffset;
